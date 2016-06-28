@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.greedygame.android.adhead.FloatAdLayout;
+import com.greedygame.android.adhead.FloatUnitLayout;
 import com.greedygame.android.agent.GreedyGameAgent;
-import com.greedygame.android.agent.GreedyGameAgent.FetchType;
 import com.greedygame.android.agent.GreedyGameAgent.OnInitEvent;
 import com.greedygame.android.agent.IAgentListener;
 
@@ -26,29 +25,26 @@ public class AdsGreedyGame  {
     protected static GLSurfaceView sGLSurfaceView = null; 
     protected static String TAG = "AdsGreedyGame";
     private static GreedyGameAgent ggAgent = null;
-    private static FloatAdLayout floatAdLayout = null;
+    private static FloatUnitLayout floatUnitLayout = null;
     
     
     public static native void onEvent(int d);
 
     public static native void onDownload(float p);
-    
-    private static final ArrayList<String> floatUnits = new ArrayList<String>();
-    private static final ArrayList<String> nativeUnits = new ArrayList<String>();
-    
     private static boolean isDebug = false;
     
     
-    // Add the float-unit-ids used in your game here
-    public static void addFloatUnits(String unitId) {
+    // Add the float units used in your game here
+    /* public static void addFloatUnits(String unitId) {
     	//floatUnits.add("your-float-unit-id");
 		floatUnits.add(unitId);
 		
-	}
+	} */
     
-    public static void addNativeUnits(String unitId) {
+    //removing these functions which are no longer needed
+    /*public static void addNativeUnits(String unitId) {
     	nativeUnits.add(unitId);
-    }
+    }*/
     
     
     public static void setup(Activity activity, GLSurfaceView value) {
@@ -67,14 +63,14 @@ public class AdsGreedyGame  {
 	        ggAgent = GreedyGameAgent.install((Activity) mContext, new AdsGreedyGame.GreedyListener());     
 	        ggAgent.gameEngine="cocos2dx";
 	        sGLSurfaceView = value;
-	        floatAdLayout = new FloatAdLayout((Activity) mContext);
+	        floatUnitLayout = new FloatUnitLayout((Activity) mContext);
 	        ((Activity) mContext).runOnUiThread(
 				new Runnable() {
 					public void run() {
 						FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
 								FrameLayout.LayoutParams.WRAP_CONTENT,
 								FrameLayout.LayoutParams.WRAP_CONTENT);
-						((Activity) mContext).addContentView(floatAdLayout, params);
+						((Activity) mContext).addContentView(floatUnitLayout, params);
 					}
 				});
     	}catch(Exception e){
@@ -96,13 +92,7 @@ public class AdsGreedyGame  {
 	    		LogD("GreedyGame has been disabled manually!!");
 	    		return;
 	    	}
-	    	units = new ArrayList<String>();
-	    	units.addAll(floatUnits);
-	    	units.addAll(nativeUnits);
-	    	String [] unit_array = new String[units.size()];
-	    	units.toArray(unit_array);
-	    	
-	        ggAgent.init(unit_array, FetchType.DOWNLOAD_BY_PATH);
+	    	ggAgent.init();
 	        ggAgent.setDebugLog(true);
 	        LogD("initialized with size "+units.size());
 	        
@@ -125,7 +115,7 @@ public class AdsGreedyGame  {
     }
   
     
-    public static void fetchAdHead(final String unit_id) {
+    public static void fetchFloatAd(final String unit_id) {
     	try{
 	    	if(!isEnable) {
 	    		LogD("GreedyGame has been disabled manually!!");
@@ -134,7 +124,7 @@ public class AdsGreedyGame  {
 	    	((Activity) mContext).runOnUiThread(
 					new Runnable() {
 						public void run() {
-							floatAdLayout.fetchHeadAd(unit_id);
+							floatUnitLayout.fetchFloatAd(unit_id);
 						}
 					});
 	    	
@@ -148,9 +138,39 @@ public class AdsGreedyGame  {
     
     public static void showEngagementWindow(String unitId) {
     	LogD("ShowEngagementWindow Called from Wrapper !!");
-    	floatAdLayout.showEngagementWindow(unitId);
+    	floatUnitLayout.showEngagementWindow(unitId);
     }
     
+    
+    public static String[] getAdUnits() {
+    	LogD("getAdUnits Called from Wrapper !!");
+    	return ggAgent.getAdUnits();
+    }
+    
+    public static String[] getNativeUnitNames() {
+    	LogD("getNativeUnitNames Called from Wrapper !!");
+    	return ggAgent.getNativeUnitNames();
+    }
+    
+    public static String[] getNativeUnits() {
+    	LogD("getNativeUnits Called from Wrapper !!");
+    	return ggAgent.getNativeUnits();
+    }
+    
+    public static String[] getFloatUnits() {
+    	LogD("getFloatUnits Called from Wrapper !!");
+    	return ggAgent.getFloatUnits();
+    }
+    
+    public static String getActiveUnitById(String id) {
+    	LogD("getActiveUnitById Called from Wrapper !!");
+    	return ggAgent.getActiveUnitById(id);
+    }
+    
+    public static String getActiveUnitByName(String filename) {
+    	LogD("getActiveunitByName Called from Wrapper !!");
+    	return ggAgent.getActiveUnitByName(filename);
+    }
     
     public static void removeAdHead() {
     	try{
@@ -162,7 +182,7 @@ public class AdsGreedyGame  {
 	    	((Activity) mContext).runOnUiThread(
 					new Runnable() {
 						public void run() {
-							floatAdLayout.remove();
+							floatUnitLayout.remove();
 						}
 					});
     	}catch(Exception e){
@@ -208,10 +228,10 @@ public static void setDebugLog(boolean b){
 
     
     
-public static void unInstall(){
+public static void forcedExit(){
     	
     	try{
-    		ggAgent.onActivityPaused((Activity) mContext);
+    		ggAgent.forcedExit((Activity) mContext);
 	    	LogD(TAG + " Uninstall inside Wrapper called !");
     	}catch(Exception e){
 			LogE("Aporting this session error in unInstall", e);

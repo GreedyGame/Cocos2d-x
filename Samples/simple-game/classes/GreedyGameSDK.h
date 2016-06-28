@@ -25,11 +25,9 @@ namespace greedygame {
     class GreedyGameSDK
     {
 
-    private:
-
-    	static std::string _getActivePath();
-
     public:
+
+        static std::string _getActivePath();
 
         static void initialize(void (*init_callback)(int), void (*progress_callback)(float));
 
@@ -47,7 +45,9 @@ namespace greedygame {
         
         static void showEngagementWindow(const char *unit_id);
 
-        static void unInstall();
+        static void forcedExit();
+
+        static void ();
 
     };
 }
