@@ -24,46 +24,46 @@ USING_NS_CC;
 
 namespace greedygame
 {
-	void (*onInitCallback)(int);
-	void (*onDownloadCallback)(float);
 
 	extern "C" {
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-		JNIEXPORT void JNICALL Java_com_greedygame_android_cocos2dx_AdsGreedyGame_onEvent(JNIEnv* env, jobject thiz, jint ret)
-		{
-			if(ret == GG_CAMPAIGN_CACHED || ret == GG_CAMPAIGN_DOWNLOADED){
-				GreedyGameSDK::setPath();
-			}
 
-			onInitCallback(ret);
+		JNIEXPORT void JNICALL Java_com_greedygame_android_cocos2dx_AdsGreedyGame_onInit(JNIEnv* env, jobject thiz, jint ret)
+		{
+			GreedyGameSDK::listener->onInit(ret);
 		}
         
-		JNIEXPORT void JNICALL Java_com_greedygame_android_cocos2dx_AdsGreedyGame_onDownload(JNIEnv* env, jobject thiz, jfloat ret)
+		JNIEXPORT void JNICALL Java_com_greedygame_android_cocos2dx_AdsGreedyGame_onProgress(JNIEnv* env, jobject thiz, jfloat ret)
 		{
-			onDownloadCallback(ret);
+			GreedyGameSDK::listener->onProgress(ret);
 		}
+
+        JNIEXPORT void JNICALL Java_com_greedygame_android_cocos2dx_AdsGreedyGame_onDownload(JNIEnv* env, jobject thiz)
+        {
+            GreedyGameSDK::listener->onDownload();
+        }
+
+        JNIEXPORT void JNICALL Java_com_greedygame_android_cocos2dx_AdsGreedyGame_onError(JNIEnv* env, jobject thiz)
+        {
+            GreedyGameSDK::listener->onError();
+        }
 #endif
         
 	}
 
 
-    void GreedyGameSDK::initialize(void (*init_callback)(int), void (*progress_callback)(float))
+    void GreedyGameSDK::init(IAgentListener* _listener)
     {
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
         cocos2d::JniMethodInfo t;
         if (cocos2d::JniHelper::getStaticMethodInfo(t, GreedyGame_CLASS_NAME
-                                                    ,"initialize"
+                                                    ,"init"
                                                     ,"()V"))
         {
             
             t.env->CallStaticVoidMethod(t.classID,t.methodID);
-            onInitCallback = init_callback;
-            onDownloadCallback = progress_callback;
-
-            /**Setting pref**/
-            std::vector<std::string> searchPaths = CCFileUtils::sharedFileUtils()->getSearchPaths();;
-            searchPaths.push_back("greedygame");
-            CCFileUtils::sharedFileUtils()->setSearchPaths(searchPaths);
+            GreedyGameSDK::listener = _listener;
+            
         }
 #endif
     }

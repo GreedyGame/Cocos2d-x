@@ -27,49 +27,60 @@ CCScene* SplashScene::scene()
     return scene;
 }
 
-void downloadProgress(float f) {
-	CCLog( "downloadProgress > : %f", f);
-	ostringstream myString;
-	myString << "Loading progress " << f <<"%";
-	std::string s = myString.str();
-	pLabel->setString(s.c_str());
 
-
-	
-}
-
-void on_init(int r) {
-	CCLog( "> on_init %d", r);
-	/*
-	 * GG_CAMPAIGN_NOT_FOUND, -1 = using no campaign
-	 * GG_CAMPAIGN_CACHED, 0 = campaign already cached
-	 * GG_CAMPAIGN_FOUND, 1 = new campaign found to Download
-	 * GG_CAMPAIGN_DOWNLOADED, 2 = new campaign is Downloaded
-	 */
-    
+class AgentListener: public IAgentListener {
 	int isBranded = -1;
-	if(r == GG_CAMPAIGN_CACHED || r == GG_CAMPAIGN_DOWNLOADED){
+	public:
+	void onInit(int event){
+		CCLog( "on_init %d", event);
+		/*
+		 * CAMPAIGN_NOT_AVAILABLE, -1 = using no campaign
+		 * CAMPAIGN_AVAILABLE, 0 = campaign already cached
+		 */
+	    
+		isBranded = -1;
+		if(r == CAMPAIGN_NOT_AVAILABLE){
+			isBranded = -1;
+		}else if(r == CAMPAIGN_AVAILABLE){
+			//Start showing progress bar
+		}
+
+		if(isBranded > -1){
+			CCDirector *pDirector = CCDirector::sharedDirector();
+			CCScene *pScene = HelloWorld::scene();
+			pDirector->replaceScene(pScene);
+		}
+	}
+
+	void onDownload(){
 		isBranded = 1;
-	}else if(r == GG_CAMPAIGN_NOT_FOUND){
-		isBranded = 0;
+
+		if(isBranded > -1){
+			CCDirector *pDirector = CCDirector::sharedDirector();
+			CCScene *pScene = HelloWorld::scene();
+			pDirector->replaceScene(pScene);
+		}
+
 	}
 
-	if(isBranded > -1){
-		//greedygame::GreedyGameSDK::fetchAdHead("float-701");
-		CCDirector *pDirector = CCDirector::sharedDirector();
-		CCScene *pScene = HelloWorld::scene();
-		pDirector->replaceScene(pScene);
+	void onError(){
+		isBranded = -1;
 	}
 
-
-}
-
+	void onProgress(float progress){
+		CCLog( "downloadProgress > : %f", progress);
+		ostringstream myString;
+		myString << "Loading progress " << progress <<"%";
+		std::string s = myString.str();
+		pLabel->setString(s.c_str());		
+	}
+};
 
 
 // on "init" you need to initialize your instance
 bool SplashScene::init()
-{
-		greedygame::GreedyGameSDK::initialize(&on_init, &downloadProgress);
+{		
+	greedygame::GreedyGameSDK::init(*(new AgentListener()));
 
     //////////////////////////////
     // 1. super init first

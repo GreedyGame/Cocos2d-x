@@ -14,41 +14,44 @@
 
 using namespace std;
 
-#define GG_CAMPAIGN_NOT_FOUND -1
-#define GG_CAMPAIGN_FOUND 1
-#define GG_CAMPAIGN_DOWNLOADED 2
-#define GG_ADUNIT_OPENED 3
-#define GG_ADUNIT_CLOSED 4
+#define CAMPAIGN_NOT_AVAILABLE -1
+#define CAMPAIGN_AVAILABLE 1
 
 namespace greedygame {
 
-    class GreedyGameSDK
-    {
+    class IAgentListener {
+        public:
+            virtual void onInit(int event);
+            virtual void onDownload();
+            virtual void onError();
+            virtual void onProgress(float progress);
+    };
 
-    public:
+    class GreedyGameSDK {
+        IAgentListener *listener;
 
-        static std::string _getActivePath();
+        public:
 
-        static void initialize(void (*init_callback)(int), void (*progress_callback)(float));
+            static void init(IAgentListener *agentListener);
 
-        static void setPath();
+            static void setPath();
 
-        static void setDebug(bool b);
+            static void setDebug(bool b);
 
-        static void cancelDownload();
+            static std::string getActiveUnitById(const char *unit_id);
 
-        static void fetchAdHead(const char *unit_id);
+            static std::string getActiveUnitByName(const char *unit_id);
 
-        static void removeAdHead();
+            static void fetchAdHead(const char *unit_id);
 
-        static void onCustomEvent(const char *event_name);
-        
-        static void showEngagementWindow(const char *unit_id);
+            static void removeAdHead();
+            
+            static void showEngagementWindow(const char *unit_id);
 
-        static void forcedExit();
+            static std::string getActivePath();
 
-        static void ();
-
+            static void forcedExit();
+ 
     };
 }
 

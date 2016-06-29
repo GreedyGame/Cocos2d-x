@@ -23,28 +23,14 @@ public class AdsGreedyGame  {
 
     private static Context mContext = null;
     protected static GLSurfaceView sGLSurfaceView = null; 
-    protected static String TAG = "AdsGreedyGame";
+    protected static String TAG = "GreedyGame";
     private static GreedyGameAgent ggAgent = null;
     private static FloatUnitLayout floatUnitLayout = null;
     
-    
-    public static native void onEvent(int d);
 
-    public static native void onDownload(float p);
+
+
     private static boolean isDebug = false;
-    
-    
-    // Add the float units used in your game here
-    /* public static void addFloatUnits(String unitId) {
-    	//floatUnits.add("your-float-unit-id");
-		floatUnits.add(unitId);
-		
-	} */
-    
-    //removing these functions which are no longer needed
-    /*public static void addNativeUnits(String unitId) {
-    	nativeUnits.add(unitId);
-    }*/
     
     
     public static void setup(Activity activity, GLSurfaceView value) {
@@ -134,33 +120,11 @@ public class AdsGreedyGame  {
 		}    	
     }
     
-    
-    
     public static void showEngagementWindow(String unitId) {
     	LogD("ShowEngagementWindow Called from Wrapper !!");
     	floatUnitLayout.showEngagementWindow(unitId);
     }
     
-    
-    public static String[] getAdUnits() {
-    	LogD("getAdUnits Called from Wrapper !!");
-    	return ggAgent.getAdUnits();
-    }
-    
-    public static String[] getNativeUnitNames() {
-    	LogD("getNativeUnitNames Called from Wrapper !!");
-    	return ggAgent.getNativeUnitNames();
-    }
-    
-    public static String[] getNativeUnits() {
-    	LogD("getNativeUnits Called from Wrapper !!");
-    	return ggAgent.getNativeUnits();
-    }
-    
-    public static String[] getFloatUnits() {
-    	LogD("getFloatUnits Called from Wrapper !!");
-    	return ggAgent.getFloatUnits();
-    }
     
     public static String getActiveUnitById(String id) {
     	LogD("getActiveUnitById Called from Wrapper !!");
@@ -223,7 +187,12 @@ public static void setDebugLog(boolean b){
         
         //Start without campaign
         isEnable = false;
-        _onEventInThread(-1);
+       	runOnGLThread(new Runnable(){
+			@Override
+			public void run() {
+				AdsGreedyGame.onInit(-1);
+			}
+		});
     }
 
     
@@ -255,6 +224,12 @@ public static void forcedExit(){
 		}
 	}
    
+
+    //For Callbacks
+	public static native void onInit(int a);
+	public static native void onDownload();
+	public static native void onError();
+	public static native void onProgress(float p);
     
     private static class GreedyListener implements IAgentListener{
 
@@ -274,25 +249,43 @@ public static void forcedExit(){
 				r = 1;
 			}
 			
-   			_onEventInThread(r);
+   			runOnGLThread(new Runnable(){
+				@Override
+				public void run() {
+					AdsGreedyGame.onInit(r);
+				}
+			});
 		}
 
 
 		@Override
 		public void onDownload() {
-			// TODO Auto-generated method stub
-			_onEventInThread(2);
+			runOnGLThread(new Runnable(){
+				@Override
+				public void run() {
+					AdsGreedyGame.onDownload(d);
+				}
+			});
 		}
 
 		@Override
 		public void onError() {
-			// TODO Auto-generated method stub
-			_onEventInThread(-1);
+			runOnGLThread(new Runnable(){
+				@Override
+				public void run() {
+					AdsGreedyGame.onError();
+				}
+			});
 		}
 
 		@Override
-		public void onProgress(float arg0) {
-			// TODO Auto-generated method stub
+		public void onProgress(float p) {
+			runOnGLThread(new Runnable(){
+				@Override
+				public void run() {
+					AdsGreedyGame.onProgress(p);
+				}
+			});
 			
 		}
 
@@ -304,23 +297,6 @@ public static void forcedExit(){
 
     }
     
-    private static void _onEventInThread(final int d) {
-		runOnGLThread(new Runnable(){
-			@Override
-			public void run() {
-				onEvent(d);
-			}
-		});
-	}
-    
-    private static void _onDownloadInThread(final float d) {
-		runOnGLThread(new Runnable(){
-			@Override
-			public void run() {
-				onDownload(d);
-			}
-		});
-	}
     
 }
 
