@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/Users/arink/Workspace/Games/SimpleGame/proj.android-studio/libgreedyandroidagent/src/main/res"><file name="fade_in_greedy" path="/Users/arink/Workspace/Games/SimpleGame/proj.android-studio/libgreedyandroidagent/src/main/res/anim/fade_in_greedy.xml" qualifiers="" type="anim"/><file name="fade_out_greedy" path="/Users/arink/Workspace/Games/SimpleGame/proj.android-studio/libgreedyandroidagent/src/main/res/anim/fade_out_greedy.xml" qualifiers="" type="anim"/><file name="hold_greedy" path="/Users/arink/Workspace/Games/SimpleGame/proj.android-studio/libgreedyandroidagent/src/main/res/anim/hold_greedy.xml" qualifiers="" type="anim"/><file name="pull_left_greedy" path="/Users/arink/Workspace/Games/SimpleGame/proj.android-studio/libgreedyandroidagent/src/main/res/anim/pull_left_greedy.xml" qualifiers="" type="anim"/><file name="pull_right_greedy" path="/Users/arink/Workspace/Games/SimpleGame/proj.android-studio/libgreedyandroidagent/src/main/res/anim/pull_right_greedy.xml" qualifiers="" type="anim"/><file name="scale_down" path="/Users/arink/Workspace/Games/SimpleGame/proj.android-studio/libgreedyandroidagent/src/main/res/anim/scale_down.xml" qualifiers="" type="anim"/><file name="scale_up" path="/Users/arink/Workspace/Games/SimpleGame/proj.android-studio/libgreedyandroidagent/src/main/res/anim/scale_up.xml" qualifiers="" type="anim"/><file name="greedy_close" path="/Users/arink/Workspace/Games/SimpleGame/proj.android-studio/libgreedyandroidagent/src/main/res/drawable/greedy_close.png" qualifiers="" type="drawable"/><file name="float_main" path="/Users/arink/Workspace/Games/SimpleGame/proj.android-studio/libgreedyandroidagent/src/main/res/layout/float_main.xml" qualifiers="" type="layout"/><file path="/Users/arink/Workspace/Games/SimpleGame/proj.android-studio/libgreedyandroidagent/src/main/res/values/styles.xml" qualifiers=""><style name="Theme.Transparent" parent="@android:style/Theme.Dialog">
+	  <item name="android:windowIsTranslucent">true</item>
+	  <item name="android:windowBackground">@android:color/transparent</item>
+	  <item name="android:windowContentOverlay">@null</item>
+	  <item name="android:windowNoTitle">true</item>
+	  <item name="android:windowIsFloating">true</item>
+	  <item name="android:backgroundDimEnabled">false</item>
+	</style><style name="AppBaseTheme" parent="android:Theme.Light">
+	    <!--
+	        Theme customizations available in newer API levels can go in
+	        res/values-vXX/styles.xml, while customizations related to
+	        backward-compatibility can go here.
+	    -->
+	</style><style name="AppTheme" parent="AppBaseTheme">
+	    <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+	</style></file></source><source path="/Users/arink/Workspace/Games/SimpleGame/proj.android-studio/libgreedyandroidagent/build/generated/res/rs/debug"/><source path="/Users/arink/Workspace/Games/SimpleGame/proj.android-studio/libgreedyandroidagent/build/generated/res/resValues/debug"/></dataSet><dataSet config="debug"><source path="/Users/arink/Workspace/Games/SimpleGame/proj.android-studio/libgreedyandroidagent/src/debug/res"/></dataSet><mergedItems/></merger>
